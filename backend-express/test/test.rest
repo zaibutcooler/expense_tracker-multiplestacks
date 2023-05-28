@@ -1,0 +1,29 @@
+GET http://localhost:5000/incomes
+
+###
+POST http://localhost:5000/daily
+Content-Type: application/json
+
+{
+  "name": "Coffee",
+  "amount": 5,
+  "currencyType": "USD"
+}
+###
+POST http://localhost:5000/daily
+Content-Type: application/json
+
+{
+  "name": "Lunch",
+  "amount": 10,
+  "currencyType": "USD"
+}
+###
+POST http://localhost:5000/daily
+Content-Type: application/json
+
+{
+  "name": "Transportation",
+  "amount": 3,
+  "currencyType": "USD"
+}
