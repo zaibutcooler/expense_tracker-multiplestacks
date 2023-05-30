@@ -5,3 +5,41 @@
 body {
   background-color: #f1f5f9;
 }
+/* AddDailyExpenseForm.css */
+
+/* Customize the scrollbar */
+::-webkit-scrollbar {
+  width: 8px; /* Set the width of the scrollbar */
+  opacity: 0; /* Initially hide the scrollbar */
+}
+
+/* Show the scrollbar on hover */
+::-webkit-scrollbar:hover {
+  opacity: 0.5; /* Set the opacity of the scrollbar on hover */
+}
+
+/* Show the scrollbar when scrolling */
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2); /* Set the color of the scrollbar handle */
+  border-radius: 4px; /* Set the border radius of the scrollbar handle */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(
+    0,
+    0,
+    0,
+    0.4
+  ); /* Set the color of the scrollbar handle on hover */
+}
+
+/* Hide the scrollbar track */
+::-webkit-scrollbar-track {
+  background: transparent; /* Set the background color of the scrollbar track */
+}
+
+/* Thin scrollbar track */
+::-webkit-scrollbar-track-piece {
+  background-color: transparent;
+}
