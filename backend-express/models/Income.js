@@ -6,6 +6,7 @@ const incomeSchema = mongoose.Schema({
   passive: { type: Boolean },
   totalMonthlyHour: { type: Number },
   currencyType: { type: String },
+  created: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("Income", incomeSchema);
