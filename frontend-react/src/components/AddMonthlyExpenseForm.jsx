@@ -1,88 +1,54 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import OtherCard from "../mini-com/OtherCard";
+import axios from "axios";
+import StatsCard from "./StatsCard";
+import MonthlyFormCard from "../mini-com/MonthlyFormCard";
 
-const AddMonthlyExpenseForm = () => {
-  const [name, setName] = useState("");
-  const [amount, setAmount] = useState("");
-  const [currencyType, setCurrencyType] = useState("dollar");
+const AddDailyExpenseForm = () => {
+  const [datas, setDatas] = useState([]);
 
-  const handleNameChange = (event) => {
-    setName(event.target.value);
-  };
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/monthly")
+      .then((res) => setDatas(res.data))
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
-  const handleAmountChange = (event) => {
-    setAmount(event.target.value);
-  };
-
-  const handleCurrencyTypeChange = (event) => {
-    setCurrencyType(event.target.value);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
+  const handleFormSubmit = (formData) => {
     // Submit form logic goes here
   };
 
   return (
-    <div className="flex justify-left mx-20 items-start min-h-screen bg-gray-100">
-      <div className="max-w-md mx-4 my-8 ">
-        <h2 className="text-xl text-center font-semibold text-gray-800 mb-6">
-          Add Your Monthly Expenses
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              htmlFor="name"
-              className="block text-gray-800 font-semibold mb-2">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={handleNameChange}
-              className="w-64 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="amount"
-              className="block text-gray-800 font-semibold mb-2">
-              Amount
-            </label>
-            <input
-              type="number"
-              id="amount"
-              value={amount}
-              onChange={handleAmountChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="currencyType"
-              className="block text-gray-800 font-semibold mb-2">
-              Currency Type
-            </label>
-            <select
-              id="currencyType"
-              value={currencyType}
-              onChange={handleCurrencyTypeChange}
-              className="w-64 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500">
-              <option value="dollar">Dollar</option>
-              {/* Add other currency options here */}
-            </select>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-slate-500 text-white font-semibold py-2 rounded-md hover:bg-slate-600">
-            Add
-          </button>
-        </form>
+    <div className="flex justify-between items-start min-h-screen bg-gray-100">
+      <div className="max-w-md mx-4 mb-6 pt-4 mt-2 w-full">
+        {/* Form content */}
+        <MonthlyFormCard onSubmit={handleFormSubmit} />
+      </div>
+      <div className="flex flex-col items-center py-6 mt-2 w-full">
+        <div className="overflow-y-auto max-h-screen w-full">
+          {datas.map((data) => (
+            <div className="ml-4">
+              <OtherCard
+                key={data._id}
+                name={data.name}
+                amount={data.amount}
+                currencyType={data.currencyType}
+                created={data.created}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="my-8 pr-8 pl-4 ml-auto w-full">
+        {/* Right component */}
+        <div style={{ margin: "0 20px" }}>
+          <StatsCard />
+        </div>
       </div>
     </div>
   );
 };
 
-export default AddMonthlyExpenseForm;
+export default AddDailyExpenseForm;

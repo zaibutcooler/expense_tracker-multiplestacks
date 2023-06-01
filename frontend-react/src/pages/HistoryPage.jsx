@@ -7,6 +7,16 @@ const HistoryPage = () => {
   const [monthly, setMonthly] = useState([]);
   const [expense, setExpense] = useState([]);
 
+  const [totalIncome, setTotalIncome] = useState(0);
+
+  const calTotalIncome = (looper) => {
+    var total = null;
+    for (item in looper) {
+      total = total + item.amount;
+    }
+    return total;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,6 +37,8 @@ const HistoryPage = () => {
         setDaily(dailyResponse.data);
         setMonthly(monthlyResponse.data);
         setExpense(expenseResponse.data);
+
+        setTotalIncome(calTotalIncome(income));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -40,9 +52,12 @@ const HistoryPage = () => {
         <h1>Item</h1>
 
         {income.map((item) => (
-          <div key={item._id}>{item.name}</div>
+          <div key={item._id}>
+            {item.name}-{item.amount}
+          </div>
         ))}
       </div>
+      <h1>Total :{totalIncome}</h1>
       <hr />
       <div>
         <h1>Daily</h1>

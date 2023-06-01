@@ -1,13 +1,57 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const StatsCard = () => {
+  const [income, setIncome] = useState([]);
+  const [daily, setDaily] = useState([]);
+  const [monthly, setMonthly] = useState([]);
+  const [expense, setExpense] = useState([]);
+  const [loadin, setLoading] = useState(true);
+
+  const [totalIncome, setTotalIncome] = useState(10);
+
+  const calculate = (looper) => {
+    let total = 0;
+    for (const item of looper) {
+      total += item.amount;
+    }
+    return total;
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const requests = [
+          axios.get("http://localhost:5000/incomes"),
+          axios.get("http://localhost:5000/daily"),
+          axios.get("http://localhost:5000/monthly"),
+          axios.get("http://localhost:5000/expenses"),
+        ];
+        const [
+          incomeResponse,
+          dailyResponse,
+          monthlyResponse,
+          expenseResponse,
+        ] = await Promise.all(requests);
+
+        setIncome(incomeResponse.data);
+        setDaily(dailyResponse.data);
+        setMonthly(monthlyResponse.data);
+        setExpense(expenseResponse.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+    setTotalIncome(calculate(income));
+  }, []);
+
   return (
-    <div className="bg-white p-4 rounded-md shadow-md">
-      <h2 className="text-lg font-semibold mb-4">Yesterday's Stats</h2>
+    <div className="bg-white py-8 px-10 ml-12 mr-10 rounded-md shadow-md">
+      <h2 className="text-2xl font-semibold mb-4">Total Result</h2>
       <div className="grid grid-cols-2 gap-4">
         <div>
           <h3 className="text-gray-600">Total Income</h3>
-          <p className="text-xl font-semibold">$1000</p>
+          <p className="text-xl font-semibold">{totalIncome}</p>
         </div>
         <div>
           <h3 className="text-gray-600">Daily Expenses</h3>
@@ -42,8 +86,8 @@ const StatsCard = () => {
           <p className="text-xl font-semibold">$125</p>
         </div>
       </div>
-      <button className="bg-blue-500 text-white font-semibold py-2 mt-4 rounded-md hover:bg-blue-600">
-        Show Stats
+      <button className="my-6 px-4 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-300">
+        Delete
       </button>
     </div>
   );

@@ -1,6 +1,11 @@
 import React from "react";
 
-const OtherCard = ({ name, amount, currencyType, created }) => {
+const OtherCard = ({ key, name, amount, currencyType, created }) => {
+  const handleDelete = () => {
+    try {
+    } catch {}
+  };
+
   return (
     <div className="bg-white rounded-lg p-4 mb-4 w-full">
       <h3 className="text-lg font-semibold mb-2">{name}</h3>
@@ -12,7 +17,7 @@ const OtherCard = ({ name, amount, currencyType, created }) => {
         <button className="px-4 py-2 mr-2 bg-slate-600 text-white rounded-md hover:bg-slate-300">
           Edit
         </button>
-        <button className="px-4 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-300">
+        <button className="px-4 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-300 mr-4">
           Delete
         </button>
       </div>
