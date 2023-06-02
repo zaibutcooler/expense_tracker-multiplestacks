@@ -20,6 +20,8 @@ const ExpenseFormCard = ({ onSubmit }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     onSubmit({ name, amount, currencyType });
+    setName("");
+    setAmount("");
   };
 
   return (

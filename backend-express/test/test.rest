@@ -1,12 +1,12 @@
 GET http://localhost:5000/incomes
 
 ###
-POST http://localhost:5000/daily
+POST http://localhost:5000/expenses
 Content-Type: application/json
 
 {
-  "name": "Coffee",
-  "amount": 5,
+  "name": "New I phone",
+  "amount": 699,
   "currencyType": "USD"
 }
 ###
@@ -19,11 +19,5 @@ Content-Type: application/json
   "currencyType": "USD"
 }
 ###
-POST http://localhost:5000/daily
-Content-Type: application/json
+DELETE http://localhost:5000/expenses/6473e296cf44d4dbb7e09ba6
 
-{
-  "name": "Transportation",
-  "amount": 3,
-  "currencyType": "USD"
-}
