@@ -6,21 +6,42 @@ import axios from "axios";
 import StatsCard from "./StatsCard";
 import ExpenseFormCard from "../mini-com/ExpenseFormCard";
 
-const AddDailyExpenseForm = () => {
+const AddDailyExpenseForm = ({ passUrl }) => {
   const [datas, setDatas] = useState([]);
-  const [sortedDatas, setSortedDatas] = useState([]);
   const [toggleEdit, setToggleEdit] = useState([]);
 
-  const url = "http://localhost:5000/expenses";
+  const url = passUrl;
 
+  // Function to sort the data based on "created" property
+  const sortDataByCreated = (data) => {
+    return data.sort((a, b) => new Date(b.created) - new Date(a.created));
+  };
+
+  // Fetch expenses data and sort it by "created" property in descending order
+  useEffect(() => {
+    axios
+      .get(url)
+      .then((res) => {
+        const sortedData = sortDataByCreated(res.data);
+        setDatas(sortedData);
+        setToggleEdit(sortedData.map(() => false));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [url]);
+
+  // Form submit handler
   const handleFormSubmit = (formData) => {
     axios
       .post(url, formData)
       .then((res) => {
         console.log("Expense created successfully");
-        setDatas((prevDatas) => [...prevDatas, res.data]);
+        const updatedData = sortDataByCreated([...datas, res.data]);
+        setDatas(updatedData);
       })
       .catch((error) => {
+        // Handle error
         if (error.response) {
           console.error(
             "Request failed with status code",
@@ -35,14 +56,17 @@ const AddDailyExpenseForm = () => {
       });
   };
 
+  // Delete expense handler
   const handleFormDelete = (id) => {
     axios
       .delete(`${url}/${id}`)
       .then((res) => {
-        console.log("Expense Deleted successfully");
-        setDatas((prevDatas) => prevDatas.filter((data) => data._id !== id));
+        console.log("Expense deleted successfully");
+        const updatedData = datas.filter((data) => data._id !== id);
+        setDatas(updatedData);
       })
       .catch((error) => {
+        // Handle error
         if (error.response) {
           console.error(
             "Request failed with status code",
@@ -57,40 +81,50 @@ const AddDailyExpenseForm = () => {
       });
   };
 
-  const handleEditOpen = (id) => {
-    const updatedEdit = [...toggleEdit];
-    updatedEdit[id] = true;
-    setToggleEdit(updatedEdit);
+  // Edit expense handler
+  const handleEditOpen = (index) => {
+    const updatedToggleEdit = [...toggleEdit];
+    updatedToggleEdit[index] = true;
+    setToggleEdit(updatedToggleEdit);
   };
 
-  const handleEditSave = (id) => {
-    const updatedEdit = [...toggleEdit];
-    updatedEdit[id] = false;
-    setToggleEdit(updatedEdit);
-  };
-
-  const handleEditCancel = (id) => {
-    const updatedEdit = [...toggleEdit];
-    updatedEdit[id] = false;
-    setToggleEdit(updatedEdit);
-  };
-
-  useEffect(() => {
+  const handleEditSave = (index, updatedData) => {
+    const expenseId = datas[index]._id;
     axios
-      .get(url)
+      .patch(`${url}/${expenseId}`, updatedData)
       .then((res) => {
-        setDatas(res.data);
-        setToggleEdit(res.data.map(() => false));
+        console.log("Expense updated successfully");
+        const updatedDatas = [...datas];
+        updatedDatas[index] = res.data;
+        setDatas(updatedDatas);
+        handleEditCancel(index);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        // Handle error
+        if (error.response) {
+          console.error(
+            "Request failed with status code",
+            error.response.status
+          );
+          console.error("Error response:", error.response.data);
+        } else if (error.request) {
+          console.error("No response received:", error.request);
+        } else {
+          console.error("Error setting up the request:", error.message);
+        }
       });
-  }, []);
+  };
+
+  const handleEditCancel = (index) => {
+    const updatedToggleEdit = [...toggleEdit];
+    updatedToggleEdit[index] = false;
+    setToggleEdit(updatedToggleEdit);
+  };
 
   return (
     <div className="flex justify-between items-start min-h-screen bg-gray-100">
       <div className="max-w-md mx-4 mb-6 pt-4 mt-2 w-full">
-        {/* Form content */}
+        {/* Expense form content */}
         <ExpenseFormCard onSubmit={handleFormSubmit} />
       </div>
       <div className="flex flex-col items-center py-6 mt-2 w-full">
@@ -98,16 +132,21 @@ const AddDailyExpenseForm = () => {
           {datas.map((data, index) => (
             <div key={data._id} className="ml-4">
               {toggleEdit[index] ? (
+                // Edit card
                 <OtherEditCard
                   id={data._id}
                   key={data._id}
                   name={data.name}
                   amount={data.amount}
                   currencyType={data.currencyType}
-                  handleSave={() => handleEditSave(index)}
+                  handleSave={(updatedData) =>
+                    handleEditSave(index, updatedData)
+                  }
                   handleCancel={() => handleEditCancel(index)}
+                  url={url}
                 />
               ) : (
+                // Normal card
                 <OtherCard
                   id={data._id}
                   key={data._id}
@@ -124,7 +163,7 @@ const AddDailyExpenseForm = () => {
         </div>
       </div>
       <div className="my-8 pr-8 pl-4 ml-auto w-full">
-        {/* Right component */}
+        {/* Stats card component */}
         <div style={{ margin: "0 20px" }}>
           <StatsCard />
         </div>

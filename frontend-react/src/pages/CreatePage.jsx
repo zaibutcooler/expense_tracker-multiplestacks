@@ -9,6 +9,11 @@ import ButtonGroup from "../mini-com/ButtonGroup";
 
 const CreatePage = () => {
   const [activeForm, setActiveForm] = useState("daily");
+  const incomeUrl = "http://localhost:5000/incomes/";
+  const dailyUrl = "http://localhost:5000/daily/";
+  const monthlyUrl = "http://localhost:5000/monthly/";
+  const expenseUrl = "http://localhost:5000/expenses/";
+
   const changeViews = (buttonData) => {
     setActiveForm(buttonData);
   };
@@ -18,11 +23,13 @@ const CreatePage = () => {
       case 1:
         return <AddIncomeForm />;
       case 2:
-        return <AddDailyExpenseForm />;
+        return <AddExpenseForm passUrl={dailyUrl} />;
+
       case 3:
-        return <AddMonthlyExpenseForm />;
+        return <AddExpenseForm passUrl={monthlyUrl} />;
+
       case 4:
-        return <AddExpenseForm />;
+        return <AddExpenseForm passUrl={expenseUrl} />;
       default:
         return <AddIncomeForm />;
     }

@@ -1,7 +1,7 @@
-GET http://localhost:5000/incomes
+GET http://localhost:5000/expenses
 
 ###
-POST http://localhost:5000/expenses
+PATCH http://localhost:5000/expenses/647e348888b8ef8e3051abcb
 Content-Type: application/json
 
 {
