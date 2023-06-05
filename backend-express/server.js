@@ -19,6 +19,9 @@ mongoose
     console.error("Failed to connect to MongoDB:", error);
   });
 
+authRoute = require("./routes/authRoutes");
+app.use("/auth", authRoute);
+
 dailyRoute = require("./routes/dailyRoutes");
 app.use("/daily", dailyRoute);
 

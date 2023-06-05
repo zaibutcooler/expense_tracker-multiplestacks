@@ -1,11 +1,25 @@
-GET http://localhost:5000/expenses
+POST http://localhost:5000/auth/register
+Content-Type: application/json
 
+{
+  "username": "James",
+  "password": "abc123",
+  "email": "james@gmail.com"
+}
+###
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+  "username": "Jack",
+  "password": "abc123"
+}
 ###
 PATCH http://localhost:5000/expenses/647e348888b8ef8e3051abcb
 Content-Type: application/json
 
 {
-  "name": "New I phone",
+  "name": "New one",
   "amount": 699,
   "currencyType": "USD"
 }
