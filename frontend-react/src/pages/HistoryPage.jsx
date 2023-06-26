@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const HistoryPage = () => {
+  const { count } = useSelector((state) => state.counter);
   const [income, setIncome] = useState([]);
   const [daily, setDaily] = useState([]);
   const [monthly, setMonthly] = useState([]);
@@ -48,6 +50,7 @@ const HistoryPage = () => {
 
   return (
     <div>
+      <div>Count :{count}</div>
       <div>
         <h1>Item</h1>
 
